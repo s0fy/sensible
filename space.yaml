@@ -1,4 +1,6 @@
 - name: Check Disk Space Usage
+  set_fact:
+    ansible_port: 17893
   hosts: all
   tasks:
           - name: Disk usage from command module
