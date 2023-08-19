@@ -1,9 +1,14 @@
-- name: Check Disk Space Usage
-  hosts: all
+- hosts: all
+  gather_facts: false
+  become: yes
+  user: root
+
   tasks:
-          - name: check for updates (yum)
-            yum: list=updates update_cache=true
-            register: yumoutput
-            when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
-          - debug:
-              msg: "{{ yumoutput.results | map(attribute='name') | list }}"
+  - name: List Available Patches (Non-Kernel)
+    yum:
+      list: updates
+      update_cache: true
+      exclude: kernel*
+    register: yumoutput
+
+  - debug: msg="{{ inventory_hostname}} {{ yumoutput.results }}"
